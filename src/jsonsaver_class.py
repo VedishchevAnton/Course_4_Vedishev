@@ -9,7 +9,19 @@ class JSONSaver(Saver):
 
     def add_vacancies(self):
         """
-        Функция записи файла с вакансиями
+        Метод записи файла с вакансиями
         """
         with open("data_file.json", 'w', encoding='utf-8') as outfile:
             json.dump(self._data, outfile, indent=1, ensure_ascii=False)
+
+    def data_file(self):
+        """
+        Метод открытия файла с вакансиями
+        """
+        try:
+            with open('data_file.json', 'r', encoding='utf-8') as file:
+                raw_json = file.read()
+                d_f = json.loads(raw_json)
+                return d_f
+        except FileNotFoundError:
+            print("Файл не найден.")
