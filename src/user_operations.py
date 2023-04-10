@@ -10,10 +10,20 @@ class UserOperations:
 
     def filter_vacancies(self):
         """
-        Метод фильтрации вакансий по ключевым словам пользователя
+        Метод сортировки вакансий по ключевым словам пользователя
         """
         for i in self.vacancies:
             if i['description'] is not None:
                 if self.filter_words.lower() in i['description'].lower():
                     self.list_vacancies.append(i)
         return self.list_vacancies
+
+    def sorting(self):
+        """
+        Метод сортировки вакансий по зарплате
+        """
+        sorted_data = sorted(self.vacancies, key=lambda x: self.get_avg_salary_range(x['payment']), reverse=True)
+        return sorted_data
+
+
+
