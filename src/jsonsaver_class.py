@@ -12,7 +12,7 @@ class JSONSaver(Saver):
         """
         Метод записи файла с вакансиями
         """
-        with open("data_file.json", 'w', encoding='utf-8') as outfile:
+        with open("data.json", 'w', encoding='utf-8') as outfile:
             json.dump(self._data, outfile, indent=1, ensure_ascii=False)
 
     def data_file(self):
@@ -20,7 +20,7 @@ class JSONSaver(Saver):
         Метод открытия файла с вакансиями
         """
         try:
-            with open('data_file.json', 'r', encoding='utf-8') as file:
+            with open('data.json', 'r', encoding='utf-8') as file:
                 raw_json = file.read()
                 d_f = json.loads(raw_json)
                 return d_f
@@ -32,7 +32,7 @@ class JSONSaver(Saver):
         Метод удаления файла с вакансиями
         """
         try:
-            with open("data_file.json", "w") as f:
+            with open("data.json", "w") as f:
                 pass
         except FileNotFoundError:
             print("Файл не найден.")
@@ -41,5 +41,5 @@ class JSONSaver(Saver):
         """
         Метод записи файла с вакансиями, после операций пользователя
         """
-        with open("user_data.json", 'w', encoding='utf-8') as outfile:
+        with open("users_sort.json", 'w', encoding='utf-8') as outfile:
             json.dump(self._data, outfile, indent=1, ensure_ascii=False)
