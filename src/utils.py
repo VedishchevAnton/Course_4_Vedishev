@@ -38,3 +38,22 @@ def resource_selection():
             return 3
         else:
             print("Некорректный ввод данных! Следуйте инструкциям, которые указаны выше.")
+
+
+def get_user_request():
+    """
+    Метод поиска запрашиваемых данных на выбранном ресурсе
+    """
+    while True:
+        if resource_selection() == 1:
+            hh = HeadHunterAPI()
+            return hh.get_vacancies(search_query())
+        elif resource_selection() == 2:
+            sj = SuperJobAPI()
+            return sj.get_vacancies(search_query())
+        elif resource_selection() == 3:
+            hh = HeadHunterAPI()
+            hh_vacancies = hh.get_vacancies(search_query())
+            sj = SuperJobAPI()
+            sj_vacancies = sj.get_vacancies(search_query())
+            return hh_vacancies + sj_vacancies
