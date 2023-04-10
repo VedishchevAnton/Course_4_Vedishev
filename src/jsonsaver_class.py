@@ -4,6 +4,7 @@ from src.saver_class import Saver
 
 
 class JSONSaver(Saver):
+
     def __init__(self, data: list):
         super().__init__(data)
 
@@ -23,5 +24,15 @@ class JSONSaver(Saver):
                 raw_json = file.read()
                 d_f = json.loads(raw_json)
                 return d_f
+        except FileNotFoundError:
+            print("Файл не найден.")
+
+    def delete_vacancies(self):
+        """
+        Метод удаления файла с вакансиями
+        """
+        try:
+            with open("data_file.json", "w") as f:
+                pass
         except FileNotFoundError:
             print("Файл не найден.")
