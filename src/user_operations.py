@@ -56,5 +56,19 @@ class UserOperations:
         else:
             return payment
 
+    def get_top(self):
+        """
+        Должен возвращать топ записей из вакансий по зарплате
+        """
+        top = []
+        counter = 0
+        for v in self.vacancies:
+            if counter < self.filter_words:
+                top.append(v)
+                counter += 1
+            else:
+                break
+        return top
+
 
 
