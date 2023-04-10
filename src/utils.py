@@ -1,7 +1,6 @@
 """Основные методы для реализации программы"""
 from src.headhunter_api import HeadHunterAPI
 from src.superjob_api import SuperJobAPI
-from src.vacancy_class import Vacancy
 from src.jsonsaver_class import JSONSaver
 from src.user_operations import UserOperations
 
@@ -108,3 +107,15 @@ def check_vacancies_data():
             if vacancies:
                 return vacancies_data
             print("Ваш запрос не найден!")
+
+
+def main():
+    print('Вас приветствует программа по сбору и обработке данных с ресурсов HeadHunter.ru и SuperJob.ru.')
+    print()
+    vacancies_data = check_vacancies_data()
+    json_saver = JSONSaver(vacancies_data)
+    json_saver.add_vacancies()
+    vacancies = json_saver.data_file()
+    user_vacancies = work_with_file(vacancies)
+    JSONSaver(user_vacancies).get_user_file()
+    print("Данные сохранены и записаны в файл 'user_data.json'")
