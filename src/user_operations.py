@@ -22,8 +22,39 @@ class UserOperations:
         """
         Метод сортировки вакансий по зарплате
         """
-        sorted_data = sorted(self.vacancies, key=lambda x: self.get_avg_salary_range(x['payment']), reverse=True)
+        sorted_data = sorted(self.vacancies, key=lambda x: self.get_salary_range(x['payment']), reverse=True)
         return sorted_data
+
+    def get_salary_range(self, payment):
+        """
+        Метод для получения среднего значения зарплаты из диапазона
+        """
+        if type(payment) != int:
+            if payment['currency'] == 'USD':  # Переводим доллар в рубли(пока так)
+                if payment['to'] is not None:
+                    payment['to'] *= 80
+                if payment['from'] is not None:
+                    payment['from'] *= 80
+                payment['currency'] = 'RUR(from USD(80))'
+            if payment['currency'] == 'EUR':
+                if payment['to'] is not None:
+                    payment['to'] *= 85
+                if payment['from'] is not None:
+                    payment['from'] *= 85
+                payment['currency'] = 'RUR(from EUR(85))'
+            if payment['currency'] == 'KZT':
+                if payment['to'] is not None:
+                    payment['to'] *= 0.15
+                if payment['from'] is not None:
+                    payment['from'] *= 0.15
+                payment['currency'] = 'RUR(from KZT(0,15))'
+            if payment['to'] == None:
+                return payment['from']
+            if payment['from'] == None:
+                return payment['to']
+            return (payment['to'] + payment['from']) / 2  # Считаем среднее значение зарплаты из значений to и from
+        else:
+            return payment
 
 
 
