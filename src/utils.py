@@ -8,6 +8,13 @@ from src.user_operations import UserOperations
 API_KEY = 'v3.r.137482765.bec7916c78cac4d8735ecab826d1fa6d374196d3.b0819ec4fbe617fcea37ae324dd6804053e04b87'
 
 
+def search_query():
+    """
+    Функция получения поискового запроса
+    """
+    return input("Введите поисковый запрос(например Python): ")
+
+
 def resource_selection():
     """
     Функция выбора ресурса
