@@ -36,3 +36,10 @@ class JSONSaver(Saver):
                 pass
         except FileNotFoundError:
             print("Файл не найден.")
+
+    def get_user_file(self):
+        """
+        Метод записи файла с вакансиями, после операций пользователя
+        """
+        with open("user_data.json", 'w', encoding='utf-8') as outfile:
+            json.dump(self._data, outfile, indent=1, ensure_ascii=False)
