@@ -118,4 +118,4 @@ def main():
     vacancies = json_saver.data_file()
     user_vacancies = work_with_file(vacancies)
     JSONSaver(user_vacancies).get_user_file()
-    print("Данные сохранены и записаны в файл 'user_data.json'")
+    print("Данные сохранены и записаны в файл 'users_sort.json'")
