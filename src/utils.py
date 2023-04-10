@@ -57,3 +57,42 @@ def get_user_request():
             sj = SuperJobAPI()
             sj_vacancies = sj.get_vacancies(search_query())
             return hh_vacancies + sj_vacancies
+
+
+def work_with_file(vacancies):
+    """
+    Метод работы с данными от лица пользователя
+    """
+    while True:
+        print(
+            "Если хотите сохранить файл и выйти, нажмите '1'\n"
+            "Если хотите произвести сортировку вакансий по ключевому слову, нажмите '2'\n"
+            "Если хотите произвести сортировку вакансий по заработной плате, нажмите '3'\n"
+            "Если хотите произвести сортировку по выбранным вами вакансиям, нажмите '4'"
+             )
+
+        user = input()
+        if user == '1':
+            return vacancies
+        elif user == '2':
+            filter_words = input("Введите ключевое слово для фильтрации вакансий: ")
+            vacancies = UserOperations(vacancies, filter_words,
+                                       top_count=0).filter_vacancies()
+            if not vacancies:
+                print("Нет вакансий, соответствующих заданным критериям.")
+                return
+            print("Операция выполнена!")
+        elif user == '3':
+            vacancies = UserOperations(vacancies).sorting()  # Сортировка полученных данных
+            print("Операция выполнена!")
+        elif user == '4':
+            while True:
+                try:
+                    top_count = float(input("Введите количество вакансий: "))
+                    vacancies = UserOperations(vacancies, top_count).get_top()  # Отсортировка топ N-количества вакансий
+                    print("Операция выполнена!")
+                    break
+                except ValueError:
+                    print("Вы ввели не число. Пожалуйста, попробуйте снова.")
+        else:
+            print("Неверное значение! Введите цифру от 1 - 4!")
