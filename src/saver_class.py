@@ -4,10 +4,15 @@ from abc import ABC, abstractmethod
 
 
 class Saver(ABC):
-    def __init__(self, data: list) -> None:
-        self.data = data
 
     @abstractmethod
-    def dump_to_file(self):
+    def dump_to_file(self, vacancy):
         pass
 
+    # @abstractmethod
+    # def get_vacancies(self, criteria):
+    #     pass
+    #
+    # @abstractmethod
+    # def delete_vacancy(self, vacancy_id):
+    #     pass
