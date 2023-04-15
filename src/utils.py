@@ -16,7 +16,9 @@ def user_interaction():
 
 
 def choice_platform():
-    """ Функция выбора платформы."""
+    """
+    Функция выбора платформы.
+    """
     while True:
         platform_ = input("Выберите платформу (hh.ru - 1, superjob.ru - 2): ")
         if platform_ == '1':
@@ -58,7 +60,8 @@ def get_from_platform(hh_api, sj_api):
 
 
 def filter_words():
-    """ Функция запрашивает у пользователя ввод ключевых слов для фильтрации вакансий по
+    """
+    Функция запрашивает у пользователя ввод ключевых слов для фильтрации вакансий по
     описанию.
     """
     user_input = input("Введите ключевые слова для фильтрации вакансий в описании:\n")
@@ -92,7 +95,7 @@ def salary_sort():
 
 def print_top_vacancies(final):
     """
-    Выводит top N вакансий на основе информации о зарплате.
+    Функция выводит top N вакансий на основе информации о зарплате.
     """
     top_n = int(input("Введите количество вакансий для вывода в топ N: "))
     if len(final) > 0:
@@ -113,7 +116,9 @@ def print_top_vacancies(final):
 
 
 def get_result(hh_vacancies, sj_vacancies, filter_word_input, salary_input):
-    """Функция вывода результатов поиска вакансий"""
+    """
+    Функция вывода результатов поиска вакансий
+    """
     json_saver = JSONSaver()  # создание экземпляра класса для сохранения результатов в JSON-файл
     json_saver.save_in_file(headhunter=hh_vacancies, superjob=sj_vacancies)  # добавление полученных данных в JSON-файл
     json_saver.search_words(filter_word_input)  # фильтрация вакансий по ключевым словам
