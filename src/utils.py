@@ -18,7 +18,7 @@ def user_interaction():
 def choice_platform():
     """ Функция выбора платформы."""
     while True:
-        platform_ = input("Выберите платформу (hh.ru - 1, superjob.ru - 2, обе платформы - 3): ")
+        platform_ = input("Выберите платформу (hh.ru - 1, superjob.ru - 2: ")
         if platform_ == '1':
             print('Вы выбрали HeadHunter.ru!')
             hh_api = HeadHunterAPI()  # создание экземпляра класса headhunter
@@ -27,11 +27,11 @@ def choice_platform():
             print('Вы выбрали Superjob.ru!')
             sj_api = SuperJobAPI()  # создание экземпляра класса superjob
             return sj_api, None
-        elif platform_ == "3":
-            print('Вы выбрали обе платформы!')
-            hh_api = HeadHunterAPI()
-            sj_api = SuperJobAPI()
-            return hh_api, sj_api
+        # elif platform_ == "3":
+        #     print('Вы выбрали обе платформы!')
+        #     hh_api = HeadHunterAPI()
+        #     sj_api = SuperJobAPI()
+        #     return hh_api, sj_api
         else:
             print('Вы не ввели платформу')
             continue
