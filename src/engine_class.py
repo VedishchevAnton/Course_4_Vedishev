@@ -6,3 +6,7 @@ class Engine(ABC):
     @abstractmethod
     def get_vacancies(self, search_query):
         pass
+
+    @staticmethod
+    def get_salary(self, salary_data):
+        pass
