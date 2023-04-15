@@ -29,47 +29,14 @@ class JSONSaver(Saver):
                     ensure_ascii=False,
                     indent=4
                 )
-        elif headhunter is not None and superjob is not None:
-            # При получении обоих аргументов для каждого создаем свой JSON-файл и сохраняем в каждый словарь с их API
-            with open('JSON_HH.json', 'w', encoding='utf-8') as file:
-                json.dump(
-                    [vars(vacancy) for vacancy in headhunter],
-                    file,
-                    ensure_ascii=False,
-                    indent=4
-                )  # headhunter
-            with open('JSON_SJ.json', 'w', encoding='utf-8') as file:
-                json.dump(
-                    [vars(vacancy) for vacancy in superjob],
-                    file,
-                    ensure_ascii=False,
-                    indent=4
-                )  # superjob
-
-            # Открыть первый файл JSON и сохранить данные
-            with open('JSON_HH.json', 'r', encoding='utf-8') as file:
-                json_hh = json.load(file)
-            # Открыть второй файл JSON и сохранить данные
-            with open('JSON_SJ.json', 'r', encoding='utf-8') as file:
-                json_sj = json.load(file)
-
-            vacancies = json_hh + json_sj  # складываем два словаря
-
-            # Сортируем по зарплате (вначале самое большое значение) и сохраняем в общий JSON-файл
-            sorted_vacancies = sorted(vacancies, key=lambda v: v['salary']['from'], reverse=True)
-            with open(self.file_name, 'w', encoding='utf-8') as file:
-                json.dump(sorted_vacancies,
-                          file,
-                          ensure_ascii=False,
-                          indent=4
-                          )
-
-            # Удаляем временные JSON-файлы
-            os.remove("JSON_HH.json")
-            os.remove("JSON_SJ.json")
-
+        # elif headhunter is not None and superjob is not None:
+        #     # Если указаны оба аргумента
+        #     with open(self.file_name, 'w', encoding='utf-8') as file:
+        #         vacancies = sorted([vars(vacancy) for vacancy in headhunter + superjob],
+        #                            key=lambda x: x['salary']['from'], reverse=True)
+        #         json.dump(vacancies, file, ensure_ascii=False, indent=4)
         else:
-            print('')  # если нет аргументов
+            print('Нет вакансий для сохранения')
 
     def get_vacancies_by_salary(self, salary_input):
         """
