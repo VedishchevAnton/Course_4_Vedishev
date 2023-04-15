@@ -1,18 +1,23 @@
 """Реализация абстрактного класса, который обязывает реализовать методы для добавления вакансий в файл,
-получения данных из файла по указанным критериям и удаления информации о вакансиях."""
+получения данных из файла по указанным критериям"""
 from abc import ABC, abstractmethod
 
 
 class Saver(ABC):
 
     @abstractmethod
-    def dump_to_file(self, vacancy):
+    def save_in_file(self, resource=None):
         pass
 
-    # @abstractmethod
-    # def get_vacancies(self, criteria):
-    #     pass
-    #
-    # @abstractmethod
-    # def delete_vacancy(self, vacancy_id):
-    #     pass
+    @abstractmethod
+    def get_vacancies_by_salary(self, salary_input):
+        pass
+
+    @abstractmethod
+    def search_words(self, search_words):
+        pass
+
+    @abstractmethod
+    def json_results(self):
+        pass
+
