@@ -1,65 +1,126 @@
 from src.headhunter_api import HeadHunterAPI
 from src.superjob_api import SuperJobAPI
 from src.jsonsaver_class import JSONSaver
+from bs4 import BeautifulSoup
 
 
-def get_search_query():
-    """Функция для получения поискового запроса от пользователя"""
-    query = input("Введите поисковый запрос: ")
-    return query
-
-
-def get_user_resource(user_query=None):
-    """Функция для получения платформы, с которой пользователь хочет получить вакансии"""
-    platform_ = input("Выберите платформу (hh.ru - 1, superjob.ru - 2, обе платформы - 3): ")
-    if platform_ == '1':
-        print('Вы выбрали HeadHunter.ru!')
-        hh = HeadHunterAPI()
-        return hh.get_vacancies(user_query)
-    elif platform_ == "2":
-        print('Вы выбрали Superjob.ru!')
-        sj = SuperJobAPI()
-        return sj.get_vacancies(user_query)
-    elif platform_ == "3":
-        print('Вы выбрали обе платформы!')
-        hh = HeadHunterAPI()
-        sj = SuperJobAPI()
-        vacancies = hh.get_vacancies(user_query)
-        vacancies.extend(sj.get_vacancies(user_query))
-        return vacancies
-    else:
-        print('Некорректный ввод')
-        return []
-
-
-def data_filter(data):
+def user_interaction():
     """
-    Метод работы с полученными вакансиями
+    Функция, для взаимодействия с пользователем
+    """
+    hh_api, sj_api = choice_platform()  # выбор платформы для сбора и обработки данных
+    hh_vacancies, sj_vacancies = get_from_platform(hh_api, sj_api)  # получение вакансий для выбранных платформ
+    filter_word_input = filter_words()  # получение ключевых слов для фильтрации
+    salary_input = salary_sort()  # получение минимальной зарплаты
+    get_result(hh_vacancies, sj_vacancies, filter_word_input, salary_input)  # вывод результатов поиска
+
+
+def choice_platform():
+    """ Функция выбора платформы."""
+    while True:
+        platform_ = input("Выберите платформу (hh.ru - 1, superjob.ru - 2, обе платформы - 3): ")
+        if platform_ == '1':
+            print('Вы выбрали HeadHunter.ru!')
+            hh_api = HeadHunterAPI()  # создание экземпляра класса headhunter
+            return hh_api, None
+        elif platform_ == "2":
+            print('Вы выбрали Superjob.ru!')
+            sj_api = SuperJobAPI()  # создание экземпляра класса superjob
+            return sj_api, None
+        elif platform_ == "3":
+            print('Вы выбрали обе платформы!')
+            hh_api = HeadHunterAPI()
+            sj_api = SuperJobAPI()
+            return hh_api, sj_api
+        else:
+            print('Вы не ввели платформу')
+            continue
+
+
+def get_from_platform(hh_api, sj_api):
+    """
+    Функция получения данных с платформы.
+    """
+    search_query = input("Введите поисковый запрос: ")
+    if hh_api:
+        hh_vacancies = hh_api.get_vacancies(search_query)  # получение данных из headhunter
+        return hh_vacancies, None
+    elif sj_api:
+        sj_vacancies = sj_api.get_vacancies(search_query)  # получение данных из superjob
+        return sj_vacancies, None
+    if hh_api and sj_api:  # получение данных с обоих ресурсов
+        hh_vacancies = hh_api.get_vacancies(search_query)
+        sj_vacancies = sj_api.get_vacancies(search_query)
+        return hh_vacancies, sj_vacancies
+
+
+def filter_words():
+    """ Функция запрашивает у пользователя ввод ключевых слов для фильтрации вакансий по
+    описанию.
+    """
+    user_input = input(
+        "Введите ключевые слова для фильтрации вакансий в описании:\n")
+    if 'выход' in user_input:
+        print('Выход из программы')
+    elif user_input == '':
+        print('Вы ничего не ввели')
+        return user_input
+    else:
+        return user_input
+
+
+def remove_tags(text):
+    """
+    Функция удаления тегов
+    """
+    soup = BeautifulSoup(text, "html.parser")
+    return soup.get_text()
+
+
+def salary_sort():
+    """
+    Функция сортировки по зарплате
     """
     while True:
-        print("Вы зашли в меню работы с данными:\n"
-              "Если вы хотите сохранить полученные данные в файл и выйти, нажмите '1'\n"
-              "Если вы хотите произвести фильтрацию вакансий по ключевому слову, нажмите '2'\n"
-              "Если вы хотите вывести top-N вакансий по зарплате, нажмите '3"
-              )
-        user_input = input()
-        if user_input == '1':
-            return data
-        elif user_input == '2':
-            filter_words = input("Введите ключевое слово для фильтрации вакансий: ")
-            filtered_vacancies = [vacancy for vacancy in data if filter_words in vacancy['description']]
-            if not filtered_vacancies:
-                print("Нет вакансий, содержащих данное ключевое слово")
+        salary_min = input("Введите минимальную зарплату для поиска (rub): ")
+        if not salary_min.strip():
+            print("Вы не ввели минимальную зарплату. Минимальное значение будет равно 0")
+            return '0'
+        try:
+            salary_min = int(salary_min)
+            return salary_min
+        except ValueError:
+            print("Некорректное значение. Минимальное значение будет равно 0")
+            return '0'
+
+
+def print_top_vacancies(final):
+    """
+    Выводит top N вакансий на основе информации о зарплате.
+    """
+    top_n = int(input("Введите количество вакансий для вывода в топ N: "))
+    if len(final) > 0:
+        for n in range(top_n):
+            # проверяем доступна ли информация о зарплате
+            if final[n]['salary']['from'] == 0:
+                salary_text = 'Зарплата не указана'
             else:
-                return filtered_vacancies
-        elif user_input == '3':
-            pass
+                salary_text = f"Зарплата: {final[n]['salary']['from']} руб"
+
+            # вывод информацию о вакансии
+            print(f"{final[n]['title']}\n"
+                  f"{salary_text}\n"
+                  f"Описание вакансии:\n{remove_tags(final[n]['description'])}\n"
+                  f"Ссылка: {final[n]['url']}\n")
+    else:
+        print('Вакансий по вашему запросу нет')
 
 
-def main():
-    print("Вас приветствует программа по сбору и обработке данных с ресурсов HeadHunter.ru и SuperJob.ru!")
-    user_query = get_search_query().lower()
-    user_request = get_user_resource()
-    data_filter(user_request)
-    json_saver = JSONSaver(user_request)
-    json_saver.dump_to_file()
+def get_result(hh_vacancies, sj_vacancies, filter_word_input, salary_input):
+    """Функция вывода результатов поиска вакансий"""
+    json_saver = JSONSaver()  # создание экземпляра класса для сохранения результатов в JSON-файл
+    json_saver.save_in_file(headhunter=hh_vacancies, superjob=sj_vacancies)  # добавление полученных данных в JSON-файл
+    json_saver.search_words(filter_word_input)  # фильтрация вакансий по ключевым словам
+    json_saver.get_vacancies_by_salary(salary_input)  # фильтрация вакансий по зарплате
+    final = json_saver.json_results()  # получение итогового результата
+    print_top_vacancies(final)
