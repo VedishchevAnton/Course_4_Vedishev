@@ -41,32 +41,28 @@ def get_from_platform(hh_api, sj_api):
     """
     Функция получения данных с платформы.
     """
-    search_query = input("Введите поисковый запрос: ")
-    if hh_api:
-        hh_vacancies = hh_api.get_vacancies(search_query)  # получение данных из headhunter
-        return hh_vacancies, None
-    elif sj_api:
-        sj_vacancies = sj_api.get_vacancies(search_query)  # получение данных из superjob
-        return sj_vacancies, None
-    if hh_api and sj_api:  # получение данных с обоих ресурсов
-        hh_vacancies = hh_api.get_vacancies(search_query)
-        sj_vacancies = sj_api.get_vacancies(search_query)
-        return hh_vacancies, sj_vacancies
+    try:
+        search_query = input("Введите поисковый запрос: ")
+        if hh_api:
+            hh_vacancies = hh_api.get_vacancies(search_query)  # получение данных из headhunter
+            return hh_vacancies, None
+        elif sj_api:
+            sj_vacancies = sj_api.get_vacancies(search_query)  # получение данных из superjob
+            return sj_vacancies, None
+        if hh_api and sj_api:  # получение данных с обоих ресурсов
+            hh_vacancies = hh_api.get_vacancies(search_query)
+            sj_vacancies = sj_api.get_vacancies(search_query)
+            return hh_vacancies, sj_vacancies
+    except:
+        print('Некорректный запрос')
 
 
 def filter_words():
     """ Функция запрашивает у пользователя ввод ключевых слов для фильтрации вакансий по
     описанию.
     """
-    user_input = input(
-        "Введите ключевые слова для фильтрации вакансий в описании:\n")
-    if 'выход' in user_input:
-        print('Выход из программы')
-    elif user_input == '':
-        print('Вы ничего не ввели')
-        return user_input
-    else:
-        return user_input
+    user_input = input("Введите ключевые слова для фильтрации вакансий в описании:\n")
+    return user_input
 
 
 def remove_tags(text):
